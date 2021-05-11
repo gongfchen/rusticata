@@ -97,6 +97,7 @@ impl<'a> RParser for HTTPParser<'a> {
                         {}
                     Ordering::Equal => {
                         debug!("finished");
+                        return ParseResult::Stop;
                     }
                     Ordering::Greater => {
                         warn!(
@@ -104,6 +105,7 @@ impl<'a> RParser for HTTPParser<'a> {
                             self.body.len(),
                             sz
                         );
+                        return ParseResult::Error;
                     }
                 }
                 return ParseResult::Ok;
@@ -136,6 +138,7 @@ impl<'a> RParser for HTTPParser<'a> {
                             }
                         }
                         warn!("Invalid encoding of Content-Length header");
+                        return ParseResult::Error;
                     }
                     "content-type" => {
                         let s = String::from_utf8_lossy(hdr.value).into_owned();
@@ -145,6 +148,7 @@ impl<'a> RParser for HTTPParser<'a> {
                         let s = String::from_utf8_lossy(hdr.value).to_lowercase();
                         if &s == "chunked" {
                             warn!("HTTP chunked response, not supported");
+                            return ParseResult::Error;
                         }
                     }
                     _ => (),
