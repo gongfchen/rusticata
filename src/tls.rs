@@ -67,6 +67,7 @@ pub enum TlsParserEvents {
 }
 
 /// TLS parser state
+#[derive(Clone)]
 pub struct TlsParser<'a> {
     _o: Option<&'a [u8]>,
 
