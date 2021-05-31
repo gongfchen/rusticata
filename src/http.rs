@@ -105,7 +105,7 @@ impl<'a> RParser for HTTPParser<'a> {
                             self.body.len(),
                             sz
                         );
-                        return ParseResult::Fatal;
+                        // return ParseResult::Fatal;
                     }
                 }
                 return ParseResult::Ok;
