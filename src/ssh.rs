@@ -1,6 +1,7 @@
 use crate::rparser::*;
 use nom::{Err, HexDisplay};
-use ssh_parser::{parse_ssh_identification, parse_ssh_packet, SshPacket};
+// use ssh_parser::{parse_ssh_identification, parse_ssh_packet, SshPacket};
+use ssh_parser::*;
 
 pub struct SSHBuilder {}
 impl RBuilder for SSHBuilder {
@@ -33,6 +34,11 @@ pub struct SSHParser<'a> {
     state: SSHConnectionState,
     buffer_clt: Vec<u8>,
     buffer_srv: Vec<u8>,
+
+    dhinit: SshPacketDhInit,
+    // dhreply: SshPacketDhReply,
+    // key_ex: SshPacketKeyExchange,
+    // version: SshVersion,
 }
 
 fn pretty_print_ssh_packet(pkt: &(SshPacket, &[u8])) {
@@ -87,15 +93,81 @@ fn pretty_print_ssh_packet(pkt: &(SshPacket, &[u8])) {
     }
 }
 
+
 impl<'a> SSHParser<'a> {
     pub fn new(name: &'a [u8]) -> SSHParser<'a> {
+        let init: [u8; 0] = [];
+        let dhinit = SshPacketDhInit {e: init};
+
         SSHParser {
             _name: Some(name),
             state: SSHConnectionState::Start,
             buffer_clt: Vec::new(),
             buffer_srv: Vec::new(),
+            dhinit,
         }
     }
+
+    // fn parse_field(&mut self, pkt: &(SshPacket, &[u8])) {
+    //     #[allow(clippy::single_match)]
+    //     match pkt.0 {
+    //         SshPacket::KeyExchange(ref kex) => {
+    //             self.kex_algs = kex.get_kex_algs();
+    //             self.server_host_key_algs = kex.get_server_host_key_algs();
+    //             self.encr_algs_client = kex.get_encr_algs_client_to_server();
+    //             self.encr_algs_server = kex.get_encr_algs_server_to_client();
+    //             self.mac_algs_client = kex.get_mac_algs_client_to_server();
+    //             self.mac_algs_server = kex.get_mac_algs_server_to_client();
+    //             self.comp_algs_client = kex.get_comp_algs_client_to_server();
+    //             self.comp_algs_server = kex.get_comp_algs_server_to_client();
+    //             self.langs_algs_client = kex.get_langs_client_to_server();
+
+    //             debug!("server_host_key_algs: {:?}", kex.get_server_host_key_algs());
+    //             debug!(
+    //                 "encr_algs_client_to_server: {:?}",
+                    
+    //             );
+    //             debug!(
+    //                 "encr_algs_server_to_client: {:?}",
+                    
+    //             );
+    //             debug!(
+    //                 "_to_server: {:?}",
+                    
+    //             );
+    //             debug!(
+    //                 "_to_client: {:?}",
+                    
+    //             );
+    //             debug!(
+    //                 "_to_server: {:?}",
+                    
+    //             );
+    //             debug!(
+    //                 "_to_client: {:?}",
+                    
+    //             );
+    //             debug!(
+    //                 "_to_server: {:?}",
+                    
+    //             );
+    //             debug!(
+    //                 "langs_algs_client_to_server: {:?}",
+    //                 kex.langs_client_to_server
+    //             );
+    //             debug!(
+    //                 "langs_algs_server_to_client: {:?}",
+    //                 kex.get_langs_server_to_client()
+    //             );
+    //             debug!(
+    //                 "langs_algs_server_to_client: {:?}",
+    //                 kex.langs_server_to_client
+    //             );
+    //             // XXX etc.
+    //         }
+    //         _ => (),
+    //     }
+    // }
 
     fn parse_ident(&mut self, i: &[u8]) -> ParseResult {
         match parse_ssh_identification(i) {
@@ -137,7 +209,8 @@ impl<'a> SSHParser<'a> {
         debug!("\tbuffer_srv size: {}", self.buffer_srv.len());
         if self.state == SSHConnectionState::Established {
             // stop following session when encrypted
-            return ParseResult::Ok;
+            // return ParseResult::Ok;
+            return ParseResult::Stop;
         }
         let mut v: Vec<u8>;
         // Check if a record is being defragmented
