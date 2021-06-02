@@ -108,7 +108,7 @@ impl<'a> SSHParser<'a> {
         }
     }
 
-    fn parse_field(&mut self, pkt: &(SshPacket, &[u8])) {
+    fn parse_field(&mut self, pkt: &(SshPacket<'a>, &[u8])) {
         #[allow(clippy::single_match)]
         match pkt.0 {
             // SshPacket::KeyExchange(ref kex) => {
