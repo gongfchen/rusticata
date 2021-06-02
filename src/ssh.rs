@@ -35,7 +35,7 @@ pub struct SSHParser<'a> {
     buffer_clt: Vec<u8>,
     buffer_srv: Vec<u8>,
 
-    dhinit: SshPacketDhInit<'a>,
+    // dhinit: SshPacketDhInit<'a>,
     // dhreply: SshPacketDhReply,
     // key_ex: SshPacketKeyExchange,
     // version: SshVersion,
@@ -104,7 +104,7 @@ impl<'a> SSHParser<'a> {
             state: SSHConnectionState::Start,
             buffer_clt: Vec::new(),
             buffer_srv: Vec::new(),
-            dhinit,
+            // dhinit,
         }
     }
 
@@ -184,7 +184,7 @@ impl<'a> SSHParser<'a> {
                 self_buffer.extend_from_slice(rem);
                 // debug!("parse_ssh_packet: {:?}", res);
                 // pretty_print_ssh_packet(res);
-                self.parse_field(res);
+                // self.parse_field(res);
                 self.state = match self.state {
                     SSHConnectionState::SIdent => SSHConnectionState::CKexInit,
                     SSHConnectionState::CKexInit => SSHConnectionState::SKexInit,
