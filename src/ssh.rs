@@ -114,7 +114,7 @@ impl<'a> SSHParser<'a> {
             // SshPacket::KeyExchange(ref kex) => {
                 
             // }
-            SshPacket::DiffieHellmanInit(dhinit) => self.dhinit = dhinit;
+            SshPacket::DiffieHellmanInit(dhinit) => self.dhinit = dhinit,
             _ => (),
         }
     }
