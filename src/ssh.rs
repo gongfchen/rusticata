@@ -35,7 +35,7 @@ pub struct SSHParser<'a> {
     buffer_clt: Vec<u8>,
     buffer_srv: Vec<u8>,
 
-    dhinit: SshPacketDhInit,
+    dhinit: SshPacketDhInit<'a>,
     // dhreply: SshPacketDhReply,
     // key_ex: SshPacketKeyExchange,
     // version: SshVersion,
@@ -96,7 +96,7 @@ fn pretty_print_ssh_packet(pkt: &(SshPacket, &[u8])) {
 
 impl<'a> SSHParser<'a> {
     pub fn new(name: &'a [u8]) -> SSHParser<'a> {
-        let init: [u8; 0] = [];
+        let init: &'a [u8] = &[];
         let dhinit = SshPacketDhInit {e: init};
 
         SSHParser {
