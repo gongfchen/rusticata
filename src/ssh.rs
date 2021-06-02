@@ -108,66 +108,16 @@ impl<'a> SSHParser<'a> {
         }
     }
 
-    // fn parse_field(&mut self, pkt: &(SshPacket, &[u8])) {
-    //     #[allow(clippy::single_match)]
-    //     match pkt.0 {
-    //         SshPacket::KeyExchange(ref kex) => {
-    //             self.kex_algs = kex.get_kex_algs();
-    //             self.server_host_key_algs = kex.get_server_host_key_algs();
-    //             self.encr_algs_client = kex.get_encr_algs_client_to_server();
-    //             self.encr_algs_server = kex.get_encr_algs_server_to_client();
-    //             self.mac_algs_client = kex.get_mac_algs_client_to_server();
-    //             self.mac_algs_server = kex.get_mac_algs_server_to_client();
-    //             self.comp_algs_client = kex.get_comp_algs_client_to_server();
-    //             self.comp_algs_server = kex.get_comp_algs_server_to_client();
-    //             self.langs_algs_client = kex.get_langs_client_to_server();
-
-    //             debug!("server_host_key_algs: {:?}", kex.get_server_host_key_algs());
-    //             debug!(
-    //                 "encr_algs_client_to_server: {:?}",
-                    
-    //             );
-    //             debug!(
-    //                 "encr_algs_server_to_client: {:?}",
-                    
-    //             );
-    //             debug!(
-    //                 "_to_server: {:?}",
-                    
-    //             );
-    //             debug!(
-    //                 "_to_client: {:?}",
-                    
-    //             );
-    //             debug!(
-    //                 "_to_server: {:?}",
-                    
-    //             );
-    //             debug!(
-    //                 "_to_client: {:?}",
-                    
-    //             );
-    //             debug!(
-    //                 "_to_server: {:?}",
-                    
-    //             );
-    //             debug!(
-    //                 "langs_algs_client_to_server: {:?}",
-    //                 kex.langs_client_to_server
-    //             );
-    //             debug!(
-    //                 "langs_algs_server_to_client: {:?}",
-    //                 kex.get_langs_server_to_client()
-    //             );
-    //             debug!(
-    //                 "langs_algs_server_to_client: {:?}",
-    //                 kex.langs_server_to_client
-    //             );
-    //             // XXX etc.
-    //         }
-    //         _ => (),
-    //     }
-    // }
+    fn parse_field(&mut self, pkt: &(SshPacket, &[u8])) {
+        #[allow(clippy::single_match)]
+        match pkt.0 {
+            // SshPacket::KeyExchange(ref kex) => {
+                
+            // }
+            SshPacket::DiffieHellmanInit(dhinit) => self.dhinit = dhinit;
+            _ => (),
+        }
+    }
 
     fn parse_ident(&mut self, i: &[u8]) -> ParseResult {
         match parse_ssh_identification(i) {
