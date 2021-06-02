@@ -153,7 +153,7 @@ impl<'a> SSHParser<'a> {
         ParseResult::Ok
     }
 
-    fn parse_packet(&mut self, i: &[u8], direction: Direction) -> ParseResult {
+    fn parse_packet(&mut self, i: &'a [u8], direction: Direction) -> ParseResult {
         debug!("parse_ssh_packet direction: {:?}", direction);
         debug!("\tbuffer_clt size: {}", self.buffer_clt.len());
         debug!("\tbuffer_srv size: {}", self.buffer_srv.len());
