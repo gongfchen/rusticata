@@ -108,16 +108,16 @@ impl<'a> SSHParser<'a> {
         }
     }
 
-    fn parse_field(&mut self, pkt: (SshPacket<'a>, &[u8])) {
-        #[allow(clippy::single_match)]
-        match pkt.0 {
-            // SshPacket::KeyExchange(ref kex) => {
+    // fn parse_field(&mut self, pkt: (SshPacket<'a>, &[u8])) {
+    //     #[allow(clippy::single_match)]
+    //     match pkt.0 {
+    //         // SshPacket::KeyExchange(ref kex) => {
                 
-            // }
-            SshPacket::DiffieHellmanInit(dhinit) => self.dhinit = dhinit,
-            _ => (),
-        }
-    }
+    //         // }
+    //         SshPacket::DiffieHellmanInit(dhinit) => self.dhinit = dhinit,
+    //         _ => (),
+    //     }
+    // }
 
     fn parse_ident(&mut self, i: &[u8]) -> ParseResult {
         match parse_ssh_identification(i) {
@@ -153,7 +153,7 @@ impl<'a> SSHParser<'a> {
         ParseResult::Ok
     }
 
-    fn parse_packet(&mut self, i: &'a [u8], direction: Direction) -> ParseResult {
+    fn parse_packet(&mut self, i: &[u8], direction: Direction) -> ParseResult {
         debug!("parse_ssh_packet direction: {:?}", direction);
         debug!("\tbuffer_clt size: {}", self.buffer_clt.len());
         debug!("\tbuffer_srv size: {}", self.buffer_srv.len());
