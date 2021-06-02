@@ -108,7 +108,7 @@ impl<'a> SSHParser<'a> {
         }
     }
 
-    fn parse_field(&mut self, pkt: &(SshPacket<'a>, &[u8])) {
+    fn parse_field(&mut self, pkt: (SshPacket, &[u8])) {
         #[allow(clippy::single_match)]
         match pkt.0 {
             // SshPacket::KeyExchange(ref kex) => {
@@ -179,11 +179,12 @@ impl<'a> SSHParser<'a> {
         };
         // info!("parsing:\n{}", buf.to_hex(16));
         match parse_ssh_packet(buf) {
-            Ok((rem, ref res)) => {
+            Ok((rem, res)) => {
                 // put back remaining data
                 self_buffer.extend_from_slice(rem);
-                debug!("parse_ssh_packet: {:?}", res);
-                pretty_print_ssh_packet(res);
+                // debug!("parse_ssh_packet: {:?}", res);
+                // pretty_print_ssh_packet(res);
+                self.parse_field(res);
                 self.state = match self.state {
                     SSHConnectionState::SIdent => SSHConnectionState::CKexInit,
                     SSHConnectionState::CKexInit => SSHConnectionState::SKexInit,
